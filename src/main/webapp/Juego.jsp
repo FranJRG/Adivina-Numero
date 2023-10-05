@@ -19,16 +19,18 @@
 	<%
 	
 		String numero = request.getParameter("numero");
+		String eliminar = request.getParameter("reiniciar");
+		String probar = request.getParameter("prueba");
 		
 		out.println(random);
 		
-		if(request.getParameter("reiniciar")!=null){
+		if(eliminar!=null){
 			random = (int) (Math.random() * 15) + 1;
 			contador=3;
 			mensaje="";
 		}
 		
-		if(request.getParameter("prueba")!=null){
+		if(probar!=null){
 			if(numero.equals(String.valueOf(random))){
 				mensaje = "Enhorabuena ha acertado el número!!!";
 				contador = 3;
@@ -52,7 +54,7 @@
 			
 			if(contador==0){
 				mensaje="Lo sentimos se le han acabado los intentos reinicie el juego";
-				if(request.getParameter("prueba")!=null){
+				if(probar=null){
 					mensaje = "Lo sentimos no puede seguir jugando";
 					out.println(mensaje);
 				}
