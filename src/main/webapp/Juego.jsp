@@ -54,7 +54,7 @@
 			
 			if(contador==0){
 				mensaje="Lo sentimos se le han acabado los intentos reinicie el juego";
-				if(probar=null){
+				if(probar!=null){
 					mensaje = "Lo sentimos no puede seguir jugando";
 					out.println(mensaje);
 				}
