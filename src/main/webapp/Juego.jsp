@@ -57,13 +57,12 @@
 
 	<%!
 		int numMax = 100;
-		int contador = 3;
 	%>
 
 	
 	<%
 	String mensaje = "";
-	
+	int contador = 3;
 	try{
 		
 		int numHidden;
@@ -75,11 +74,9 @@
 			numHidden = (int) session.getAttribute("number");
 		}
 		
-		
 		String numTest = request.getParameter("numTest");
 		
 		if(request.getParameter("prueba")!=null){
-			
 			
 			String numHiddenStr = String.valueOf(numHidden);
 			
@@ -87,11 +84,11 @@
 				mensaje = "Si!!!!, acertaste el número, menudo geni@ se perdió el mundo";
 				contador = 3;
 			}else if(Integer.valueOf(numTest) > Integer.valueOf(numHiddenStr)){
-				mensaje = "Vaya..., el número introducido es mayor que el mio intentalo otra vez...";
 				contador--;
+				mensaje = "Vaya..., el número introducido es mayor que el mio intentalo otra vez..., le quedan: " + contador;
 			}else if(Integer.valueOf(numTest) < Integer.valueOf(numHiddenStr)){
-				mensaje = "Su número es más bajo que el mio, no pierda la fe y siga intentandolo";
 				contador--;
+				mensaje = "Su número es más bajo que el mio, no pierda la fe y siga intentandolo, le quedan: " + contador;
 			}
 			
 			if(contador==0){
@@ -118,7 +115,7 @@
 	
 		<h2>BIENVENIDO A... ADIVINA MI NÚMERO!!!</h2>
 	
-		<textarea name="number" cols="60" placeholder=""><%=mensaje %></textarea><br>
+		<textarea name="number" readonly="readonly" cols="60" placeholder=""><%=mensaje %></textarea><br>
 		
 		<br>
 		
@@ -126,8 +123,8 @@
 		
 		<br>
 		
-		<button name="prueba">Probar número</button>
-		<button name="reiniciar">Reiniciar juego</button>
+		<button type="submit" name="prueba">Probar número</button>
+		<button type="submit" name="reiniciar">Reiniciar juego</button>
 		
 	</form>
 
