@@ -61,51 +61,86 @@
 
 	
 	<%
-	String mensaje = "";
-	int contador = 3;
-	try{
-		
-		int numHidden;
 	
-		if(session.getAttribute("number")==null){
-			numHidden = Numero.generateNumber(numMax);
-			session.setAttribute("number", numHidden);
-		}else{
-			numHidden = (int) session.getAttribute("number");
-		}
-		
-		String numTest = request.getParameter("numTest");
-		
-		if(request.getParameter("prueba")!=null){
+		String mensaje = "";
+		try{
 			
-			String numHiddenStr = String.valueOf(numHidden);
+			int numHidden;
+			int contador;
+			String test = request.getParameter("prueba");
+			String init = request.getParameter("reiniciar");
 			
-			if(numTest.equals(numHiddenStr)){
-				mensaje = "Si!!!!, acertaste el número, menudo geni@ se perdió el mundo";
+			//CREAMOS LAS SESIONES OPORTUNAS EN CASO DE QUE SEAN NULAS
+			
+			if(session.getAttribute("cont")==null){
+				contador=3;
+				session.setAttribute("cont", contador);
+			}else{
+				contador = (int) session.getAttribute("cont");
+			}
+		
+			if(session.getAttribute("number")==null){
+				numHidden = Numero.generateNumber(numMax);
+				session.setAttribute("number", numHidden);
+			}else{
+				numHidden = (int) session.getAttribute("number");
+			}
+			
+			if(session.getAttribute("message")==null){
+				mensaje="";
+				session.setAttribute("message", mensaje);
+			}else{
+				mensaje = (String) session.getAttribute("message");
+			}
+			
+			String numTest = request.getParameter("numTest");
+			
+			
+			//EVALUAMOS LOS POSIBLES CASOS QUE PUEDEN PASAR CUANDO EL USUARIO ENVIA UN NUMERO
+			
+			if(test!=null){
+				
+				if(Integer.valueOf(numTest)==numHidden){
+					mensaje += "Si!!!!, acertaste el número, menudo geni@ se perdió el mundo\n";
+					contador = 3;
+					session.setAttribute("message", mensaje);
+					session.setAttribute("cont", contador);
+				}else if(Integer.valueOf(numTest) > numHidden){
+					contador--;
+					mensaje += "Vaya..., el número introducido es mayor que el mio intentalo otra vez..., le quedan: " + contador + "\n";
+					session.setAttribute("cont", contador);
+					session.setAttribute("message", mensaje);
+				}else if(Integer.valueOf(numTest) < numHidden){
+					contador--;
+					mensaje += "Su número es más bajo que el mio, no pierda la fe y siga intentandolo, le quedan: " + contador + "\n";
+					session.setAttribute("cont", contador);
+					session.setAttribute("message", mensaje);
+				}
+				
+				if(contador==0){
+					mensaje += "Lo sentimos se le acabaron los intentos el numero era..." + numHidden;
+					session.setAttribute("message", mensaje);
+				}
+				
+			}
+			
+			//REINICIAMOS EL JUEGO CUANDO EL USUARIO PULSE REINICIAR
+			
+			if(init!=null ){
+				numHidden = Numero.generateNumber(numMax);
+				session.setAttribute("number", numHidden);
+				
 				contador = 3;
-			}else if(Integer.valueOf(numTest) > Integer.valueOf(numHiddenStr)){
-				contador--;
-				mensaje = "Vaya..., el número introducido es mayor que el mio intentalo otra vez..., le quedan: " + contador;
-			}else if(Integer.valueOf(numTest) < Integer.valueOf(numHiddenStr)){
-				contador--;
-				mensaje = "Su número es más bajo que el mio, no pierda la fe y siga intentandolo, le quedan: " + contador;
+				session.setAttribute("cont", contador);
+				
+				mensaje="";
+				session.setAttribute("message", mensaje);
 			}
 			
-			if(contador==0){
-				mensaje = "Lo sentimos se le acabaron los intentos el numero era..." + numHidden;
-			}
-			
+		}catch(Exception e){
+			mensaje = "Error inesperado";
+			session.setAttribute("message", mensaje);
 		}
-		
-		if(request.getParameter("reiniciar") !=null ){
-			numHidden = Numero.generateNumber(numMax);
-			session.setAttribute("number", numHidden);
-			contador = 3;
-			mensaje="";
-		}
-	}catch(Exception e){
-		mensaje = "Ocurrió un error inesperado";
-	}
 	
 	%>
 
@@ -115,7 +150,7 @@
 	
 		<h2>BIENVENIDO A... ADIVINA MI NÚMERO!!!</h2>
 	
-		<textarea name="number" readonly="readonly" cols="60" placeholder=""><%=mensaje %></textarea><br>
+		<textarea name="number" readonly="readonly" cols="60" rows="6" placeholder=""><%=mensaje %></textarea><br>
 		
 		<br>
 		
